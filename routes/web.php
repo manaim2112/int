@@ -74,4 +74,10 @@ Route::prefix("blog")->middleware(SettingMiddleware::class)->group(function() {
     Route::post("/{slug}/comment", [BlogController::class, 'storeComment'])->name('blog.comment');
 });
 
+Route::domain("absen.mtssupel.sch.id")->group(function () {
+    Route::get("/", function () {
+        return "INI ABSEN";
+    });
+});
+
 require __DIR__.'/auth.php';
