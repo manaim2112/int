@@ -59,6 +59,15 @@ return [
             ]) : [],
         ],
 
+        'rdm' => [
+            'driver' => 'mysql',
+            'host' => env('RDM_HOST', 'localhost'),
+            'port' => env('RDM_PORT', '3306'),
+            'database' => env('RDM_DATABASE', 'rdmme'),
+            'username' => env('RDM_USERNAME', 'root'),
+            'password' => env('RDM_PASSWORD', ''),
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

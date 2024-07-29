@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User_history;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -29,10 +30,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        if($request->user()) {
+            $histoy = User_history::where("user_id", $request->user()->id)->get();
+        }
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'history' => $histoy ?? null,
             ],
         ];
     }
