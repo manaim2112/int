@@ -133,7 +133,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                         />
                     </PopoverContent>
                 </Popover>
-                <span className="mx-5 font-bold text-white shadow-lg">
+                <span className="mx-5 hidden md:block font-bold text-white shadow-lg">
                     Sampai
                 </span>
                 <Popover>
