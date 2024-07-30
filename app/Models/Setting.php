@@ -23,4 +23,10 @@ class Setting extends Model
        // Update the specified record to set 'active' to true
        self::query()->where('id', $id)->update(['active' => true]);
     }
+
+    // Method to get the current active setting
+    public static function getActiveSetting()
+    {
+        return self::where('active', 1)->first();
+    }
 }

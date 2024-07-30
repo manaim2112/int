@@ -13,8 +13,33 @@ class Absen extends Model
     public $timestamps = true;
 
 
+    protected static function boot()
+    {
+        parent::boot();
 
-    public function user() {
-        $this->belongsTo(User::class);
+        static::creating(function ($model) {
+            $activeSetting = \App\Models\Setting::getActiveSetting();
+            if ($activeSetting) {
+                $model->setting_id = $activeSetting->id;
+            }
+        });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Find absences within a specific date range.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $firstDate
+     * @param string $lastDate
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFindDate($query, $firstDate, $lastDate)
+    {
+        return $query->whereBetween('tanggal', [$firstDate, $lastDate]);
     }
 }

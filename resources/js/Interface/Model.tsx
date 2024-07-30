@@ -66,12 +66,14 @@ interface Kelas {
 }
 
 interface Absen {
+    id : number;
     setting_id : number;
     user_id : number;
     status : string;
     jam_dinas : string;
     tanggal : string;
     keterangan : string;
+    user : User
 }
 
 

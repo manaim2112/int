@@ -52,7 +52,8 @@ class User extends Authenticatable
         return $this->hasMany(User_history::class);
     }
 
-    public function absen() {
-        return $this->hasOne(Absen::class);
+    public function absens()
+    {
+        return $this->hasMany(Absen::class);
     }
 }

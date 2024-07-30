@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MuridController;
@@ -14,8 +15,15 @@ use Inertia\Inertia;
 
 Route::domain("absen.mtssupel.sch.id")->group(function () {
     Route::get("/", function () {
-        return "INI ABSEN";
+        
+        return Inertia::render("Absen");
     });
+});
+
+Route::prefix("absen")->group(function () {
+    Route::get("/", [AbsenController::class, 'index'])->name('absen');
+    Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
+    Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
 });
 
 
@@ -45,7 +53,7 @@ Route::prefix("/dashboard")->middleware(['auth', 'verified'])->group(function ()
 
     Route::prefix("murid")->middleware(SettingMiddleware::class)->group(function() {
         Route::get('', [MuridController::class, 'dashboardIndex'])->name('dashboard.murid');
-        Route::post('/data', [MuridController::class, 'dashboardData'])->name('dashboard.murid.update.post');
+        Route::post('/data', [MuridController::class, 'dashboardData'])->name('dashboard.murid.post');
         Route::post('/data/create', [MuridController::class, 'dashboardDataCreate'])->name('dashboard.murid.create.post');
         Route::post('/data/id/{id}/update', [MuridController::class, 'dashboardDataUpdate'])->name('dashboard.murid.update.post');
     });
