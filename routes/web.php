@@ -14,17 +14,14 @@ use Inertia\Inertia;
 
 
 Route::domain("absen.mtssupel.sch.id")->group(function () {
-    Route::get("/", function () {
-        
-        return Inertia::render("Absen");
-    });
-});
-
-Route::prefix("absen")->group(function () {
     Route::get("/", [AbsenController::class, 'index'])->name('absen');
     Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
     Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
 });
+
+// Route::prefix("absen")->group(function () {
+    
+// });
 
 
 Route::middleware(SettingMiddleware::class)->get('/', function () {
