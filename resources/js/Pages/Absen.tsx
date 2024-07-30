@@ -140,8 +140,12 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
                         <ToggleGroupItem value="IJIN">IJIN</ToggleGroupItem>
                         <ToggleGroupItem value="ALPA">ALPA</ToggleGroupItem>
                     </ToggleGroup>
-                    <Input type="number" onChange={e => setJamDinas(Number(e.currentTarget.value))} placeholder="JUMLAH JAM"></Input>
                 </div>
+                {
+                    status === "IJIN" && (
+                        <Input type="number" className="mt-3" onChange={e => setJamDinas(Number(e.currentTarget.value))} placeholder="JUMLAH JAM IJIN"></Input>
+                    )
+                }
                 <Textarea onKeyUp={e => setKeterangan(e.currentTarget.value)}
                     className="mt-3"
                     placeholder="Tambahkan Keterangan lain, seperti tugas, dan alasan tidak masuk (jika ada)"
