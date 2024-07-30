@@ -16,12 +16,14 @@ use Inertia\Inertia;
 Route::domain("absen.mtssupel.sch.id")->group(function () {
     Route::get("/", [AbsenController::class, 'index'])->name('absen');
     Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
+    Route::get("/check", [AbsenController::class, 'check'])->name('absen.check');
     Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
 });
 
 // Route::prefix("absen")->group(function () {
 //     Route::get("/", [AbsenController::class, 'index'])->name('absen');
 //     Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
+//     Route::get("/check", [AbsenController::class, 'check'])->name('absen.check');
 //     Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
 // });
 

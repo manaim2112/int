@@ -10,13 +10,14 @@ use Inertia\Inertia;
 
 class AbsenController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         // Ambil Semua Guru;
         $users = User::all();
     
         $now = now()->format("Y-m-d");
+        $setting = $request->get("site_setting");
         // DB::enableQueryLog();
-        $absen = Absen::with('user')->findDate($now, $now)->get();
+        $absen = Absen::with('user')->findDate($now, $now)->where('setting_id', '=', $setting->id)->get();
         // dd(DB::getQueryLog());
     
         return Inertia::render("Absen", [
@@ -54,5 +55,19 @@ class AbsenController extends Controller
         $absen->delete();
 
         return redirect()->route('absen');
+    }
+
+    public function check(Request $request) {
+        $startDate = $request->query("start_date", now()->format('Y-m-d'));
+        $endDate =$request->query("end_date", now()->format('Y-m-d'));
+
+        $setting = $request->get("site_setting");
+        // DB::enableQueryLog();
+        $absen = Absen::with('user')->findDate($startDate, $endDate)->where('setting_id', '=', $setting->id)->get();
+
+
+        return Inertia::render("AbsenCheck", [
+            "absen" => $absen
+        ]);
     }
 }
