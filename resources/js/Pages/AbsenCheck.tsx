@@ -110,7 +110,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                         <Button
                             variant={"outline"}
                             className={cn(
-                                "w-auto justify-start shadow-lg bg-yellow-300 text-left font-normal",
+                                "w-auto me-1 justify-start shadow-lg bg-yellow-300 text-left font-normal",
                                 !startDate && "text-muted-foreground"
                             )}
                         >
@@ -141,7 +141,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                         <Button
                             variant={"outline"}
                             className={cn(
-                                "w-auto justify-start bg-yellow-300 shadow-lgtext-left font-normal",
+                                "w-auto ms-1 justify-start bg-yellow-300 shadow-lgtext-left font-normal",
                                 !endDate && "text-muted-foreground"
                             )}
                         >
