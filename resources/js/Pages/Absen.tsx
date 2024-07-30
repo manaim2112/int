@@ -153,32 +153,36 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
                 <Button onClick={handleSubmit} className={"mt-2 w-full"} disabled={prosess}>SIMPAN</Button>
             </div>
 
-            <div className="mt-4 container">
-                <h2 className="text-xl font-bold">Data Guru yang tidak hadir hari ini :</h2>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Tanggal</TableHead>
-                            <TableHead>Nama Guru</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {
-                            absen.map((a, k) => (
-                                <TableRow className={k%2 === 1 ? "bg-accent" : ""} key={k}>
-                                    <TableCell>{a.tanggal}</TableCell>
-                                    <TableCell>{a.user.name}</TableCell>
-                                    <TableCell>{a.status}</TableCell>
-                                    <TableCell>
-                                        <ConfirmDelete data={a}/>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
+            <div className="mt-4">
+                <div className="container">
+                    <h2 className="text-xl font-bold">Data Guru yang tidak hadir hari ini :</h2>
+                </div>
+                <div className="md:container">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Tanggal</TableHead>
+                                <TableHead>Nama Guru</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {
+                                absen.map((a, k) => (
+                                    <TableRow className={k%2 === 1 ? "bg-accent" : ""} key={k}>
+                                        <TableCell>{a.tanggal}</TableCell>
+                                        <TableCell>{a.user.name}</TableCell>
+                                        <TableCell>{a.status}</TableCell>
+                                        <TableCell>
+                                            <ConfirmDelete data={a}/>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
 
             <div className="bg-slate-200 p-10 flex justify-center mt-20">
