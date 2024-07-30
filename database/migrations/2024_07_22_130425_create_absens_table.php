@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('piket_id');
             $table->enum('status', ['HADIR', 'SAKIT', 'IJIN', 'ALPA', 'CUTI', 'TUGAS DINAS'])->default('HADIR')->index();
+            $table->string("masuk")->nullable();
+            $table->string("pulang")->nullable();
             $table->string('jam_dinas')->nullable();
             $table->date('tanggal')->nullable();
             $table->text('keterangan')->nullable();

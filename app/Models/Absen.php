@@ -9,7 +9,7 @@ class Absen extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['setting_id', 'user_id', 'piket_id', 'status', 'jam_dinas', 'tanggal', 'keterangan'];
+    protected $fillable = ['setting_id', 'user_id', 'piket_id', 'status', 'masuk', 'pulang', 'jam_dinas', 'tanggal', 'keterangan'];
     public $timestamps = true;
 
 

@@ -70,4 +70,50 @@ class AbsenController extends Controller
             "absen" => $absen
         ]);
     }
+
+    public function getUser() {
+        $users = User::all();
+
+        return response()->json([
+            "status" => "success",
+            "data" => $users
+        ]);
+    }
+
+    public function getAbsen(Request $request) {
+        $now = now()->format("Y-m-d");
+        $setting = $request->get("site_setting");
+        // DB::enableQueryLog();
+        $absen = Absen::with('user')->findDate($now, $now)->where('setting_id', '=', $setting->id)->get();
+        // dd(DB::getQueryLog());
+
+        return response()->json($absen);
+    }
+
+    public function postAbsen(Request $request) {
+        $request->validate([
+            "piket_id" => "required",
+            "user_id" => "required",
+            "status" => "required",
+            "tanggal" => "required",
+        ]);
+
+        $absen = new Absen();
+        $absen->setting_id = $request->get('site_setting')->id;
+        $absen->piket_id = $request->input("piket_id");
+        $absen->user_id = $request->input("user_id");
+        $absen->status = $request->input("status");
+        $absen->tanggal = $request->input("tanggal");
+        $absen->keterangan = $request->input("keterangan") ?? null;
+        $absen->jam_dinas = $request->input("jam_dinas") ?? NULL;
+
+        if($absen->save()) {
+            return response()->json([
+                "status" => "success",
+            ]);
+        }
+        return response()->json([
+            "status" => "failed"
+        ]);
+    }
 }
