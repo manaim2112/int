@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absen;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -27,7 +28,7 @@ class AbsenController extends Controller
         return Inertia::render("Absen", [
             "users" => $users,
             "absen" => $absen ?? []
-        ]);
+        ])->with("message", "HELLO");
     }
 
     public function absenPost(Request $request) {
@@ -38,6 +39,13 @@ class AbsenController extends Controller
             "tanggal" => "required",
         ]);
 
+        $checking = Absen::query()
+    ->where("user_id", "=", $request->input('user_id'))
+    ->where("tanggal", "=", Carbon::parse($request->input('tanggal'))->format("Y-m-d"))
+    ->get()
+    ->count();
+
+        if($checking > 0) return redirect()->route('absen')->with("message", "Sudah Terabsen");
         $absen = new Absen();
         $absen->setting_id = $request->get('site_setting')->id;
         $absen->piket_id = $request->input("piket_id");
@@ -48,9 +56,9 @@ class AbsenController extends Controller
         $absen->jam_dinas = $request->input("jam_dinas") ?? NULL;
 
         if($absen->save()) {
-            return redirect()->route('absen');
+            return redirect()->route('absen')->with("message", "Berhasil Tersimpan");
         }
-        return redirect()->route('absen');
+        return redirect()->route('absen')->with("message", "Terjadi kesalahan saat menyimpan");
     }
 
     public function absenDelete(string $id, Request $request) {

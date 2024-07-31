@@ -261,3 +261,33 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
         </>
     );
 }
+
+
+export const exportToExcel = (dataArray: Array<Record<string, any>>) => {
+    if (dataArray.length === 0) return;
+
+    // Membuat header CSV
+    const headers = Object.keys(dataArray[0]).join(",") + "\n";
+
+    // Membuat baris data CSV
+    const rows = dataArray.map(row => Object.values(row).join(",")).join("\n");
+
+    // Menggabungkan header dan baris data
+    const csvContent = headers + rows;
+
+    // Membuat Blob dari konten CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Membuat link untuk mengunduh file
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "data.csv");
+
+    // Menambahkan link ke dokumen dan mengkliknya untuk mengunduh file
+    document.body.appendChild(link);
+    link.click();
+
+    // Membersihkan
+    document.body.removeChild(link);
+};

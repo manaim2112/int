@@ -6,18 +6,20 @@ import { Card, CardHeader } from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/Components/ui/select";
+import { Toaster } from "@/Components/ui/sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Textarea } from "@/Components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { PageProps } from "@/types";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { format } from "date-fns";
 import { id } from 'date-fns/locale';
 import { CalendarIcon, PowerCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export default function Absen({users, absen} : PageProps<{users:User[], absen:Absen[]}>) {
+export default function Absen({users, absen, flash} : PageProps<{flash : {message : any}, users:User[], absen:Absen[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [piket, setPiket] = useState<number|null>(null);
     const [guru, setGuru] = useState<number|null>(null);
@@ -26,11 +28,17 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
     const [keterangan, setKeterangan] = useState<string|null>(null);
     const [prosess, setProsess] = useState<boolean>(false);
 
+
+
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const start = params.get('date')
         if(start) {
             setDate(new Date(start));
+        }
+
+        if(flash) {
+            console.log(flash);
         }
 
     }, [])
@@ -66,11 +74,16 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
 
         setProsess(false);
     }
+    
+    const Toast = (message : string) => {
+        toast(message);
+    }
 
 
 
     return (
         <>
+        <Toaster/>
             <Card>
                 <CardHeader>
                     <div className="flex sm:flex-row flex-col gap-2 md:gap-4 items-center mx-auto">
@@ -83,6 +96,7 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
                             </h2>
                         </div>
                     </div>
+                    {flash.message && Toast(flash.message)}
                 </CardHeader>
             </Card>
             <div className="container mt-5 ">
@@ -190,8 +204,9 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
                                         <TableCell>{a.tanggal}</TableCell>
                                         <TableCell>{a.user.name}</TableCell>
                                         <TableCell>{a.status}</TableCell>
-                                        <TableCell>
-                                            <ConfirmDelete date={date ?? new Date()} data={a}/>
+                                        <TableCell>{
+                                            a.keterangan }
+                                            {/* <ConfirmDelete date={date ?? new Date()} data={a}/> */}
                                         </TableCell>
                                     </TableRow>
                                 ))
