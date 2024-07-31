@@ -55,9 +55,11 @@ class AbsenController extends Controller
 
     public function absenDelete(string $id, Request $request) {
         $absen = Absen::findOrFail($id);
-
+        $date = $request->query('date');
         $absen->delete();
-
+        if($date) {
+            return redirect()->route('absen', ['date' => $date]);
+        }
         return redirect()->route('absen');
     }
 
