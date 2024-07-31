@@ -42,7 +42,7 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
 
         // Update URL dan reload halaman
         window.location.search = `?date=${formattedDate}`;
-        
+
         setDate(localDate);
     };
     const handleSubmit = () => {
@@ -191,7 +191,7 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
                                         <TableCell>{a.user.name}</TableCell>
                                         <TableCell>{a.status}</TableCell>
                                         <TableCell>
-                                            <ConfirmDelete data={a}/>
+                                            <ConfirmDelete date={date ?? new Date()} data={a}/>
                                         </TableCell>
                                     </TableRow>
                                 ))
@@ -208,7 +208,7 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
     );
 }
 
-export const ConfirmDelete = ({data} : {data:Absen}) => {
+export const ConfirmDelete = ({date, data} : {date:Date,data:Absen}) => {
     const [sandi, setSandi] = useState<string|null>(null)
     const [msg, setMsg] = useState<string|null>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -227,7 +227,8 @@ export const ConfirmDelete = ({data} : {data:Absen}) => {
             }, 3000);
             return;
         };
-        router.post(route('absen.delete', data.id), {
+        const formattedDate = date.toISOString().split('T')[0];
+        router.post(route('absen.delete', {id : data.id, date : formattedDate}), {
             id : data.id
         })
     }
