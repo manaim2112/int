@@ -11,11 +11,11 @@ import { Textarea } from "@/Components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { PageProps } from "@/types";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { format } from "date-fns";
 import { id } from 'date-fns/locale';
 import { CalendarIcon, PowerCircle, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Absen({users, absen} : PageProps<{users:User[], absen:Absen[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
@@ -26,8 +26,23 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
     const [keterangan, setKeterangan] = useState<string|null>(null);
     const [prosess, setProsess] = useState<boolean>(false);
 
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const start = params.get('date')
+        if(start) {
+            setDate(new Date(start));
+        }
+
+    }, [])
+
     const handleDateSelect = (selectedDate:any) => {
         const localDate = new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000);
+        // Format tanggal menjadi string ISO (YYYY-MM-DD)
+        const formattedDate = localDate.toISOString().split('T')[0];
+
+        // Update URL dan reload halaman
+        window.location.search = `?date=${formattedDate}`;
+        
         setDate(localDate);
     };
     const handleSubmit = () => {
@@ -58,10 +73,11 @@ export default function Absen({users, absen} : PageProps<{users:User[], absen:Ab
         <>
             <Card>
                 <CardHeader>
-                    <div className="flex sm:flex-row flex-col gap-4 items-center mx-auto">
-                        <PowerCircle className="lg:w-72 lg:h-72 md:w-56 md:h-56 sm:w-40 sm:h-40 w-24 h-24 text-blue-800"></PowerCircle>
+                    <div className="flex sm:flex-row flex-col gap-2 md:gap-4 items-center mx-auto">
+                        <Link href={route('absen.check')}>
+                            <PowerCircle className="lg:w-72 lg:h-72 md:w-56 md:h-56 sm:w-40 sm:h-40 w-24 h-24 text-blue-800"></PowerCircle>
+                        </Link>
                         <div className="w-full">
-                            <div className="flex gap-2 mb-5"></div>
                             <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold">
                                 ABSEN DIGITAL
                             </h2>

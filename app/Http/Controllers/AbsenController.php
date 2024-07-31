@@ -15,6 +15,10 @@ class AbsenController extends Controller
         $users = User::all();
     
         $now = now()->format("Y-m-d");
+        $date = $request->query("date");
+        if($date) {
+            $now = $date;
+        }
         $setting = $request->get("site_setting");
         // DB::enableQueryLog();
         $absen = Absen::with('user')->findDate($now, $now)->where('setting_id', '=', $setting->id)->get();
