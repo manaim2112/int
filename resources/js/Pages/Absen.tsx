@@ -71,7 +71,7 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
     }
     useEffect(() => {
         const y = users.filter(Obj => Obj.id === authID);
-        console.log(authID, y, users);
+        // console.log(authID, y, users);
         setPiketUser(y);
     }, [])
 
@@ -232,9 +232,9 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                         </SelectContent>
                     </Select>
                     <ToggleGroup onValueChange={e => setStatus(e)} variant={"outline"} type="single">
-                        <ToggleGroupItem value="SAKIT">SAKIT</ToggleGroupItem>
-                        <ToggleGroupItem value="IJIN">IJIN</ToggleGroupItem>
-                        <ToggleGroupItem value="ALPA">ALPA</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:bg-blue-500" value="SAKIT">SAKIT</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:bg-yellow-500" value="IJIN">IJIN</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:bg-red-500" value="ALPA">ALPA</ToggleGroupItem>
                     </ToggleGroup>
                 </div>
                 {
@@ -272,7 +272,10 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                                         <TableCell>{a.status}</TableCell>
                                         <TableCell>{
                                             a.keterangan }
-                                            {/* <ConfirmDelete date={date ?? new Date()} data={a}/> */}
+
+                                            { piketUser && piketUser?.length > 0 && piketUser[0].histories.find(h => ["Operator", "Kepala Sekolah", "Bendahara", "administrator"].includes(h.jabatan)) && (
+                                                <ConfirmDelete date={date ?? new Date()} data={a}/>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 ))

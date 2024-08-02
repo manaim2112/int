@@ -46,7 +46,7 @@ class AbsenController extends Controller
             $allowedRoles = ["administrator", "Guru Piket", "Kepala Sekolah", "Bendahara", "Operator"];
             if ($userHistory->intersect($allowedRoles)->isNotEmpty()) {
                 $request->session()->regenerate();
-                Auth::loginUsingId($id);
+                Auth::loginUsingId($id, true);
                 return redirect()->route('absen');
             }
     
@@ -119,7 +119,7 @@ class AbsenController extends Controller
         //     return redirect()->route('absen.auth'); // Redirect to the desired route if already logged in
         // }
         // Ambil Semua Guru;
-        $users = User::all();
+        $users = User::with("histories")->get();
         $now = now()->format("Y-m-d");
         $date = $request->query("date");
         if($date) {
