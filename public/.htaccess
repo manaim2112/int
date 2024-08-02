@@ -3,6 +3,12 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    <IfModule mod_security2.c>
+        <LocationMatch "/auth/callback">
+            SecRuleRemoveById 930120
+        </LocationMatch>
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header
