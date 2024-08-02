@@ -19,7 +19,41 @@ import { CalendarIcon, PowerCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function Absen({users, absen, flash, authID} : PageProps<{ authID? : number|null; flash : {message : any}, users:User[], absen:Absen[]}>) {
+const oauthSignIn = (client_id : string, redirect_uri : string) => {
+    const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+    // Parameters to pass to OAuth 2.0 endpoint.
+    const params: { [key: string]: string } = {
+      client_id: client_id,
+      redirect_uri: redirect_uri,
+      response_type: 'token',
+      scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
+      include_granted_scopes: 'true',
+      state: 'pass-through value'
+    };
+
+    // Create <form> element to submit parameters to OAuth 2.0 endpoint.
+    const form = document.createElement('form');
+    form.setAttribute('method', 'GET');
+    form.setAttribute('action', oauth2Endpoint);
+
+    // Add form parameters as hidden input values.
+    for (const p in params) {
+      if (params.hasOwnProperty(p)) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', p);
+        input.setAttribute('value', params[p]);
+        form.appendChild(input);
+      }
+    }
+
+    // Add form to page and submit it to open the OAuth 2.0 endpoint.
+    document.body.appendChild(form);
+    form.submit();
+  };
+
+export default function Absen({users, absen, flash, authID, google_client_id, google_redirect_uri} : PageProps<{ authID? : number|null; google_client_id? : string, google_redirect_uri? : string, flash : {message : any}, users:User[], absen:Absen[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [piket, setPiket] = useState<number|null>(null);
     const [guru, setGuru] = useState<number|null>(null);
@@ -30,6 +64,11 @@ export default function Absen({users, absen, flash, authID} : PageProps<{ authID
     const [piketUser, setPiketUser] = useState<User[]|null>(null);
 
 
+    const loginWithGoogle = () => {
+        if(google_client_id && google_redirect_uri) {
+            oauthSignIn(google_client_id, google_redirect_uri);
+        }
+    }
     useEffect(() => {
         const y = users.filter(Obj => Obj.id === authID);
         console.log(authID, y, users);
@@ -101,11 +140,11 @@ export default function Absen({users, absen, flash, authID} : PageProps<{ authID
                 <div className="fixed flex items-center justify-center w-full h-screen bg-white/30 backdrop-blur-sm">
                     <div className="container">
                         <h2 className="text-3xl">Anda Belum Login</h2>
-                        <a href={route('absen.auth', {redirect : route('absen')})} className={buttonVariants({variant : "default"})}>
+                        <Button onClick={loginWithGoogle}>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-5 h-5 me-3"></img>
                          Login With Google
                         
-                        </a>
+                        </Button>
                     </div>
                 </div>
             ) 

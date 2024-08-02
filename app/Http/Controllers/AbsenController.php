@@ -14,22 +14,15 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AbsenController extends Controller
 {
-    public function authRedirect() {
-        return Socialite::driver('google')->redirect();
-    }
+    public function authRedirect(Request $request) {
+        $email = $request->query("email");
+        $accessToken = $request->query("accessToken");
+        session(["accessToken" => $accessToken]);
+        $user = User::query()->where("email", "=", $email)->get()->first();
 
-    public function authCallback(Request $request) {
-        // try {
-            // Mengambil pengguna dari Google
-            $user = Socialite::driver('google')->user();
-            dd($user);
-            $email = $user->getEmail();
-    
-            // Mengambil pengaturan dari request
-            $setting = $request->get("site_setting");
-            
-            // Memeriksa apakah pengguna terdaftar di sistem
+         // Memeriksa apakah pengguna terdaftar di sistem
             $user = User::query()->where("email", "=", $email)->first();
+            $setting = $request->get("site_setting");
             if (!$user) {
                 return Inertia::render("Error/ErrorAbsenLogin", [
                     "message" => "Mohon Maaf, Anda tidak berhak untuk Melakukan Absensi karena tidak terdaftar di " . $setting->name,
@@ -61,6 +54,55 @@ class AbsenController extends Controller
                 "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena anda bukan Guru Piket yang tidak terdaftar di " . $setting->name,
                 "allowed" => true,
             ]);
+        // return Socialite::driver('google')->redirect();
+    }
+
+    public function authCallback(Request $request) {
+        return Inertia::render("AbsenCallback");
+        // $query = $request->all();
+        // dd($query);
+        // try {
+            // Mengambil pengguna dari Google
+            // $user = Socialite::driver('google')->user();
+            // dd($user);
+            // $email = $user->getEmail();
+    
+            // // Mengambil pengaturan dari request
+            // $setting = $request->get("site_setting");
+            
+            // // Memeriksa apakah pengguna terdaftar di sistem
+            // $user = User::query()->where("email", "=", $email)->first();
+            // if (!$user) {
+            //     return Inertia::render("Error/ErrorAbsenLogin", [
+            //         "message" => "Mohon Maaf, Anda tidak berhak untuk Melakukan Absensi karena tidak terdaftar di " . $setting->name,
+            //         "allowed" => false,
+            //     ]);
+            // }
+    
+            // $id = $user->id;
+    
+            // // Memeriksa riwayat pengguna berdasarkan setting dan user ID
+            // $userHistory = User_history::query()->where("setting_id", "=", $setting->id)->where("user_id", "=", $id)->get()->pluck('jabatan');
+    
+            // if ($userHistory->isEmpty()) {
+            //     return Inertia::render("Error/ErrorAbsenLogin", [
+            //         "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena pada tahun pelajaran " . $setting->id . "/" . ($setting->id + 1) . ", anda tidak terdaftar di " . $setting->name,
+            //         "allowed" => false,
+            //     ]);
+            // }
+    
+            // // Memeriksa apakah pengguna memiliki jabatan yang diizinkan
+            // $allowedRoles = ["administrator", "Guru Piket", "Kepala Sekolah", "Bendahara", "Operator"];
+            // if ($userHistory->intersect($allowedRoles)->isNotEmpty()) {
+            //     $request->session()->regenerate();
+            //     Auth::loginUsingId($id);
+            //     return redirect()->route('absen');
+            // }
+    
+            // return Inertia::render("Error/ErrorAbsenLogin", [
+            //     "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena anda bukan Guru Piket yang tidak terdaftar di " . $setting->name,
+            //     "allowed" => true,
+            // ]);
         // } catch (\Throwable $th) {
         //     // Menangani pengecualian
         //     return Inertia::render("Error/ErrorAbsenLogin", [
@@ -89,11 +131,17 @@ class AbsenController extends Controller
         // dd(DB::getQueryLog());
         $setting = $request->get("site_setting");
         
+
+        // google_client_id
+        $google_client_id = env("GOOGLE_CLIENT_ID");
+        $google_redirect_uri = env("GOOGLE_CALLBACK_URL");
     
         return Inertia::render("Absen", [
             "users" => $users,
             "absen" => $absen ?? [],
             "authID" => auth()->id() ?? null,
+            "google_client_id" => $google_client_id,
+            "google_redirect_uri" => $google_redirect_uri
         ])->with("message", "HELLO");
     }
 
