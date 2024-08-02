@@ -25,6 +25,7 @@ class UserController extends Controller
         }])->get();
 
         $kelas = Kelas::all();
+
     
         // Render dengan Inertia
         return Inertia::render('Dashboard/User', [

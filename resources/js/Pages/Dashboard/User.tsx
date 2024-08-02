@@ -291,7 +291,7 @@ export function UpdateData({e, setting}: {e:User, setting:Setting}) {
                                     }
                                     <SelectLabel>UMUM</SelectLabel>
                                     {
-                                        ['Guru', 'Pembantu Umum'].map((t,i) => (
+                                        ['Guru','Guru Piket', 'Pembantu Umum'].map((t,i) => (
                                             <SelectItem key={i} value={t}>{t}</SelectItem>
                                         ))
                                     }

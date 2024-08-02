@@ -4,14 +4,72 @@ namespace App\Http\Controllers;
 
 use App\Models\Absen;
 use App\Models\User;
+use App\Models\User_history;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Laravel\Socialite\Facades\Socialite;
 
 class AbsenController extends Controller
 {
+    public function authRedirect() {
+        if (Auth::check()) {
+            return redirect()->route('absen'); // Redirect to the desired route if already logged in
+        }
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function authCallback(Request $request) {
+        // Check if the user is already authenticated
+        if (Auth::check()) {
+            return redirect()->route('absen'); // Redirect to the desired route if already logged in
+        }
+
+        try {
+            //code...
+            $user = Socialite::driver('google')->user();
+            $email = $user->getEmail();
+
+            $setting   = $request->get("site_setting");
+            $user = User::query()->where("email", "=", $email)->first();
+            if (!$user) return Inertia::render("Error/ErrorAbsenLogin", [
+                "message" => "Mohon Maaf, Anda tidak berhak untuk Melakukan Absensi karena tidak terdaftar di " . $setting->name,
+                "allowed" => false,
+            ]);
+            
+            $id = $user->id;
+            $setting = $request->get("site_setting");
+            $userHistory = User_history::query()->where("setting_id", "=", $setting->id)->where("user_id", "=", $id)->get()->pluck('jabatan');
+            
+            
+            if($userHistory->isEmpty()) return Inertia::render("Error/ErrorAbsenLogin", [
+                "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena pada tahun pelajaran ". $setting->id . "/" . $setting->id+1 .", anda tidak terdaftar di " . $setting->name,
+                "allowed" => false,
+            ]);
+            
+            $allowedRoles = ["administrator", "Guru Piket", "Kepala Sekolah", "Bendahara", "Operator"];
+            if($userHistory->intersect($allowedRoles)->isNotEmpty()) {
+                Auth::setUser($user);
+                return redirect()->route('absen');
+            }
+        
+            return Inertia::render("Error/ErrorAbsenLogin", [
+                "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena anda bukan Guru Piket yang tidak terdaftar di " . $setting->name,
+                "allowed" => true,
+            ]);
+        } catch (\Throwable $th) {
+            
+            return redirect()->route('absen');
+        }
+    }
+    
     public function index(Request $request) {
+
+        if (!Auth::check()) {
+            return redirect()->route('absen.auth'); // Redirect to the desired route if already logged in
+        }
         // Ambil Semua Guru;
         $users = User::all();
     
@@ -24,10 +82,15 @@ class AbsenController extends Controller
         // DB::enableQueryLog();
         $absen = Absen::with('user')->findDate($now, $now)->where('setting_id', '=', $setting->id)->get();
         // dd(DB::getQueryLog());
+        $setting = $request->get("site_setting");
+        
+        dd(auth()->user());
+
     
         return Inertia::render("Absen", [
             "users" => $users,
-            "absen" => $absen ?? []
+            "absen" => $absen ?? [],
+            "authID" => auth()->id()
         ])->with("message", "HELLO");
     }
 

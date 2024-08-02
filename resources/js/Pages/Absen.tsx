@@ -12,14 +12,14 @@ import { Textarea } from "@/Components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { PageProps } from "@/types";
-import { Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { format } from "date-fns";
 import { id } from 'date-fns/locale';
 import { CalendarIcon, PowerCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function Absen({users, absen, flash} : PageProps<{flash : {message : any}, users:User[], absen:Absen[]}>) {
+export default function Absen({users, absen, flash, authID} : PageProps<{ authID : number; flash : {message : any}, users:User[], absen:Absen[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [piket, setPiket] = useState<number|null>(null);
     const [guru, setGuru] = useState<number|null>(null);
@@ -27,6 +27,14 @@ export default function Absen({users, absen, flash} : PageProps<{flash : {messag
     const [jamDinas, setJamDinas] = useState<number|null>(null);
     const [keterangan, setKeterangan] = useState<string|null>(null);
     const [prosess, setProsess] = useState<boolean>(false);
+    const [piketUser, setPiketUser] = useState<User[]|null>(null);
+
+
+    useEffect(() => {
+        const y = users.filter(Obj => Obj.id === authID);
+        console.log(authID, y, users);
+        setPiketUser(y);
+    }, [])
 
 
 
@@ -83,6 +91,11 @@ export default function Absen({users, absen, flash} : PageProps<{flash : {messag
 
     return (
         <>
+        <Head
+        >
+            <title>Digital Absen MTs Sunan Ampel Kraton</title>
+            <meta name="description" content="Absen digital salah satu bentuk keseriusan untuk mentertibkan kehadiran pada tenaga pendidik"/>
+        </Head>
         <Toaster/>
             <Card>
                 <CardHeader>
@@ -108,7 +121,7 @@ export default function Absen({users, absen, flash} : PageProps<{flash : {messag
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Pilih Guru Piket</SelectLabel>
-                                {users.map((e, k) => (
+                                {piketUser && piketUser.map((e, k) => (
                                     <SelectItem key={k} value={String(e.id)}>
                                         {e.name}
                                     </SelectItem>

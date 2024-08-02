@@ -11,21 +11,9 @@ use App\Http\Middleware\SettingMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Socialite\Facades\Socialite;
 
-
-Route::domain("absen.mtssupel.sch.id")->group(function () {
-    Route::get("/", [AbsenController::class, 'index'])->name('absen');
-    Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
-    Route::get("/check", [AbsenController::class, 'check'])->name('absen.check');
-    Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
-    Route::prefix("json")->group(function() {
-        Route::get("/absen", [AbsenController::class, 'getAbsen']);
-        Route::post("/absen", [AbsenController::class, 'postAbsen']);
-        Route::get("/user", [AbsenController::class, 'getUser']);
-    });
-});
-
-// Route::prefix("absen")->group(function () {
+// Route::domain("absen.mtssupel.sch.id")->group(function () {
 //     Route::get("/", [AbsenController::class, 'index'])->name('absen');
 //     Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
 //     Route::get("/check", [AbsenController::class, 'check'])->name('absen.check');
@@ -36,6 +24,22 @@ Route::domain("absen.mtssupel.sch.id")->group(function () {
 //         Route::get("/user", [AbsenController::class, 'getUser']);
 //     });
 // });
+
+Route::prefix("absen")->group(function () {
+
+    Route::get("/auth/redirect", [AbsenController::class, 'authRedirect'])->name("absen.auth");
+    Route::get("/auth/callback", [AbsenController::class, 'authCallback'])->name("absen.auth.callback");
+
+    Route::get("/", [AbsenController::class, 'index'])->name('absen');
+    Route::post("/", [AbsenController::class, 'absenPost'])->name('absen.post');
+    Route::get("/check", [AbsenController::class, 'check'])->name('absen.check');
+    Route::post("{id}/delete", [AbsenController::class, 'absenDelete'])->name('absen.delete');
+    Route::prefix("json")->group(function() {
+        Route::get("/absen", [AbsenController::class, 'getAbsen']);
+        Route::post("/absen", [AbsenController::class, 'postAbsen']);
+        Route::get("/user", [AbsenController::class, 'getUser']);
+    });
+});
 
 
 Route::middleware(SettingMiddleware::class)->get('/', function () {
