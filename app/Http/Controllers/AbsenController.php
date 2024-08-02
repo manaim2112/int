@@ -19,7 +19,7 @@ class AbsenController extends Controller
     }
 
     public function authCallback(Request $request) {
-        try {
+        // try {
             // Mengambil pengguna dari Google
             $user = Socialite::driver('google')->user();
             dd($user);
@@ -61,13 +61,13 @@ class AbsenController extends Controller
                 "message" => "Mohon Maaf, Anda tidak berhak untuk Absensi karena anda bukan Guru Piket yang tidak terdaftar di " . $setting->name,
                 "allowed" => true,
             ]);
-        } catch (\Throwable $th) {
-            // Menangani pengecualian
-            return Inertia::render("Error/ErrorAbsenLogin", [
-                "message" => "Terjadi kesalahan: " . $th->getMessage(),
-                "allowed" => false,
-            ]);
-        }
+        // } catch (\Throwable $th) {
+        //     // Menangani pengecualian
+        //     return Inertia::render("Error/ErrorAbsenLogin", [
+        //         "message" => "Terjadi kesalahan: " . $th->getMessage(),
+        //         "allowed" => false,
+        //     ]);
+        // }
     }
     
     
