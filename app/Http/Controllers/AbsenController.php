@@ -22,6 +22,7 @@ class AbsenController extends Controller
         try {
             // Mengambil pengguna dari Google
             $user = Socialite::driver('google')->user();
+            dd($user);
             $email = $user->getEmail();
     
             // Mengambil pengaturan dari request
