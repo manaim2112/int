@@ -1,6 +1,6 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/Components/ui/alert-dialog";
 import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+import { Button, buttonVariants } from "@/Components/ui/button";
 import { Calendar } from "@/Components/ui/calendar";
 import { Card, CardHeader } from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
@@ -19,7 +19,7 @@ import { CalendarIcon, PowerCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function Absen({users, absen, flash, authID} : PageProps<{ authID : number; flash : {message : any}, users:User[], absen:Absen[]}>) {
+export default function Absen({users, absen, flash, authID} : PageProps<{ authID? : number|null; flash : {message : any}, users:User[], absen:Absen[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [piket, setPiket] = useState<number|null>(null);
     const [guru, setGuru] = useState<number|null>(null);
@@ -96,6 +96,20 @@ export default function Absen({users, absen, flash, authID} : PageProps<{ authID
             <title>Digital Absen MTs Sunan Ampel Kraton</title>
             <meta name="description" content="Absen digital salah satu bentuk keseriusan untuk mentertibkan kehadiran pada tenaga pendidik"/>
         </Head>
+        {
+            !authID && (
+                <div className="fixed flex items-center justify-center w-full h-screen bg-white/30 backdrop-blur-sm">
+                    <div className="container">
+                        <h2 className="text-3xl">Anda Belum Login</h2>
+                        <a href={route('absen.auth', {redirect : route('absen')})} className={buttonVariants({variant : "default"})}>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-5 h-5 me-3"></img>
+                         Login With Google
+                        
+                        </a>
+                    </div>
+                </div>
+            ) 
+        }
         <Toaster/>
             <Card>
                 <CardHeader>
