@@ -232,9 +232,9 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                         </SelectContent>
                     </Select>
                     <ToggleGroup onValueChange={e => setStatus(e)} variant={"outline"} type="single">
-                        <ToggleGroupItem className="data-[state='on']:bg-blue-500" value="SAKIT">SAKIT</ToggleGroupItem>
-                        <ToggleGroupItem className="data-[state='on']:bg-yellow-500" value="IJIN">IJIN</ToggleGroupItem>
-                        <ToggleGroupItem className="data-[state='on']:bg-red-500" value="ALPA">ALPA</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:!bg-blue-500 data-[state='on']:!text-white" value="SAKIT">SAKIT</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:!bg-yellow-500 data-[state='on']:!text-white" value="IJIN">IJIN</ToggleGroupItem>
+                        <ToggleGroupItem className="data-[state='on']:!bg-red-500 data-[state='on']:!text-white" value="ALPA">ALPA</ToggleGroupItem>
                     </ToggleGroup>
                 </div>
                 {
