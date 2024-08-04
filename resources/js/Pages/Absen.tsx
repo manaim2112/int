@@ -70,7 +70,10 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
         }
     }
     useEffect(() => {
-        const y = users.filter(Obj => Obj.id === authID);
+        const y = users.filter(Obj => {
+            const h = Obj.histories.filter(j => ["Kepala Sekolah", "Operator", "Bendahara", "Guru Piket"].includes(j.jabatan)).map(j => j.jabatan);
+            return h;        
+        });
         // console.log(authID, y, users);
         setPiketUser(y);
     }, [])
@@ -135,7 +138,7 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
             <title>Digital Absen MTs Sunan Ampel Kraton</title>
             <meta name="description" content="Absen digital salah satu bentuk keseriusan untuk mentertibkan kehadiran pada tenaga pendidik"/>
         </Head>
-        {
+        {/* {
             !authID && (
                 <div className="fixed flex items-center justify-center w-full h-screen bg-white/30 backdrop-blur-sm">
                     <div className="container">
@@ -148,7 +151,7 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                     </div>
                 </div>
             ) 
-        }
+        } */}
         <Toaster/>
             <Card>
                 <CardHeader>

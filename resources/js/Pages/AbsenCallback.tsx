@@ -39,6 +39,7 @@ export default function AbsenCallback() {
     });
 
     if (!response.ok) {
+        console.log(response);
       throw new Error('Failed to fetch data from Google Drive API');
     }
 
