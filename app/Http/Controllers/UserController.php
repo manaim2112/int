@@ -50,9 +50,12 @@ class UserController extends Controller
         $t->email = trim($request->input('email'));
         $t->name = trim($request->input('name'));
         $t->password = Hash::make(trim($request->input('password')));
-        $t->save();
+        if($t->saveOrFail()) {
+            return redirect()->route('dashboard.user')->with("message", "Berhasil membuat akun guru");
+        }
 
-        return redirect()->route('dashboard.user');
+        return redirect()->route('dashboard.user')->with("message", "Gagal, ID tidak boleh sama (duplicate)");
+
     }
 
 
@@ -71,9 +74,9 @@ class UserController extends Controller
         $user->email = trim($request->input('email'));
 
         if($user->touch()) {
-            return redirect()->route('dashboard.user');
+            return redirect()->route('dashboard.user')->with("message", "Berhasil Memperbarui Data Pribadi");
         }
-        return redirect()->route('dashboard.user');
+        return redirect()->route('dashboard.user')->with("message", "Gagal Memperbarui Data Pribadi");
     }
 
     public function dashboardUpdateJabatan(string $id, Request $request) {
@@ -94,7 +97,20 @@ class UserController extends Controller
             "setting_id" => $setting->id
         ]);
 
-        return redirect()->route('dashboard.user');
+        return redirect()->route('dashboard.user')->with("message", "Jabatan berhasil di perbarui");
+    }
+
+    public function dashboardUpdateGender(string $id, Request $request) {
+        $request->validate([
+            "gender" => "required",
+        ]);
+
+        $gender = $request->input("gender");
+        $user = User::query()->find($id)->update([
+            "gender" => $gender
+        ]);
+
+        return redirect()->route('dashboard.user')->with("message", "Jenis Kelamin Berhasil DI perbarui");
     }
 
     public function dashboardDeleteJabatan(string $id, Request $request) {

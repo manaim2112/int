@@ -7,14 +7,16 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet";
+import { Toaster } from "@/Components/ui/sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group";
 import PanelLayout from "@/Layouts/PanelLayout";
 import { PageProps } from "@/types";
 import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
 import { toast } from 'sonner'
 
-export default function User({auth, setting, users} : PageProps<{auth : Auth, setting:Setting, users:User[]}>) {
+export default function User({auth, setting, users, flash} : PageProps<{auth : Auth, flash: {message : any}, setting:Setting, users:User[]}>) {
     const isAdmin = auth.user.id === 1 || 
     auth.history.map(e => e.jabatan).includes('administrator') || 
     auth.history.map(e => e.jabatan).includes('Operator') ||
@@ -25,6 +27,7 @@ export default function User({auth, setting, users} : PageProps<{auth : Auth, se
         <PanelLayout>
             <Head title="Guru"/>
             <h2 className="text-4xl">Pegawai</h2>
+            { flash.message && toast(flash.message)}
             <Card className="mt-10">
                 <CardHeader>
                     <CardTitle className="flex gap-2 items-center">
@@ -42,6 +45,7 @@ export default function User({auth, setting, users} : PageProps<{auth : Auth, se
                                 <TableHead>No</TableHead>
                                 <TableHead>NID</TableHead>
                                 <TableHead>NAMA</TableHead>
+                                <TableHead>Jenis Kelamin</TableHead>
                                 <TableHead className="w-40">Jabatan</TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
@@ -53,6 +57,8 @@ export default function User({auth, setting, users} : PageProps<{auth : Auth, se
                                         <TableCell>{e.id}</TableCell>
                                         <TableCell>{e.nid}</TableCell>
                                         <TableCell>{e.name}</TableCell>
+                                        <TableCell>{
+                                            e.gender ?(e.gender === "P" ? "Perempuan" : "Laki-Laki") : "BELUM DI SET"}</TableCell>
                                         <TableCell>
                                             {
                                                 e.histories.length > 0 ? (
@@ -202,6 +208,12 @@ export function UpdateData({e, setting}: {e:User, setting:Setting}) {
          
     }
 
+    const handleUpdateGender = (val :string) => {
+        router.post(route('dashboard.user.update.gender', e.id), {
+            gender : val
+        });
+    }
+
     const handleRemoveJabatan = (isChecked:boolean, id:number) => {
         const t = idJabatan;
         if(isChecked) {
@@ -268,6 +280,18 @@ export function UpdateData({e, setting}: {e:User, setting:Setting}) {
                         />
                     </div>
                     <Button onClick={handleUpdateGuru}>Perbarui data</Button>
+                    <hr className="my-5"></hr>
+                    <h2 className="text-2xl mb-3">Jenis Kelamin</h2>
+                        
+                    <ToggleGroup onValueChange={handleUpdateGender} value={e.gender} type="single">
+                        <ToggleGroupItem value="L" aria-label="Toggle bold">
+                            Laki-laki
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="P" aria-label="Toggle italic">
+                            Perempuan
+                        </ToggleGroupItem>
+                    </ToggleGroup>
+
                     <hr className="my-5"></hr>
                     <h2 className="text-2xl mb-3">Jabatan</h2>
                     <div className="flex gap-2 items-center mb-5">

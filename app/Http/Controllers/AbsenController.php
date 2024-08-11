@@ -118,8 +118,16 @@ class AbsenController extends Controller
         // if (!Auth::check()) {
         //     return redirect()->route('absen.auth'); // Redirect to the desired route if already logged in
         // }
+        $setting = $request->get("site_setting");
         // Ambil Semua Guru;
-        $users = User::with("histories")->get();
+        $users = User::with(["histories" => function($query) use ($setting) {
+            $query->where("setting_id", $setting->id);
+        }])->where("id", "!=", 1)->get();
+        $piket = $users->filter(function($user) {
+            $history = collect($user->histories);
+            return $history->pluck('jabatan')->intersect(["Guru Piket", "Operator", "Kepala Sekolah", "Bendahara"])->isNotEmpty();
+        });
+
         $now = now()->format("Y-m-d");
         $date = $request->query("date");
         if($date) {
@@ -137,6 +145,7 @@ class AbsenController extends Controller
         $google_redirect_uri = env("GOOGLE_CALLBACK_URL");
     
         return Inertia::render("Absen", [
+            "userpiket" => $piket,
             "users" => $users,
             "absen" => $absen ?? [],
             "authID" => auth()->id() ?? null,

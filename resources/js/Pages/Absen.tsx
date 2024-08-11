@@ -53,7 +53,7 @@ const oauthSignIn = (client_id : string, redirect_uri : string) => {
     form.submit();
   };
 
-export default function Absen({users, absen, flash, authID, google_client_id, google_redirect_uri} : PageProps<{ authID? : number|null; google_client_id? : string, google_redirect_uri? : string, flash : {message : any}, users:User[], absen:Absen[]}>) {
+export default function Absen({userpiket, users, absen, flash, authID, google_client_id, google_redirect_uri} : PageProps<{ authID? : number|null; google_client_id? : string, google_redirect_uri? : string, flash : {message : any}, users:User[], absen:Absen[], userpiket : User[]}>) {
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [piket, setPiket] = useState<number|null>(null);
     const [guru, setGuru] = useState<number|null>(null);
@@ -177,7 +177,7 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Pilih Guru Piket</SelectLabel>
-                                {piketUser && piketUser.map((e, k) => (
+                                {userpiket && userpiket.map((e, k) => (
                                     <SelectItem key={k} value={String(e.id)}>
                                         {e.name}
                                     </SelectItem>
@@ -216,7 +216,7 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                 </div>
                 <hr className="mt-5"></hr>
                 <div className="text-3xl mt-5 font-bold">
-                    Pilih Guru Yang tidak masuk
+                    Pilih Guru 
                 </div>
                 <div className="flex gap-3 mt-5">
                     <Select onValueChange={e => setGuru(Number(e))}>
@@ -225,8 +225,25 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectLabel>Pilih Guru</SelectLabel>
-                                {users.map((e, k) => (
+                                <SelectLabel>Pilih Guru Laki-Laki</SelectLabel>
+                                {users.filter(e => e.gender == "L").sort((a,b) => {
+                                    if (a.name === "HADIR SEMUA") return -1;
+                                    if (b.name === "HADIR SEMUA") return 1;
+                                    return a.name < b.name ? -1 : 1;
+                                }).map((e, k) => (
+                                    <SelectItem key={k} value={String(e.id)}>
+                                        {e.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                            <SelectGroup>
+                                <SelectLabel>Pilih Guru Perempuan</SelectLabel>
+
+                                {users.filter(e => e.gender == "P").sort((a,b) => {
+                                    if (a.name === "HADIR SEMUA") return -1;
+                                    if (b.name === "HADIR SEMUA") return 1;
+                                    return a.name < b.name ? -1 : 1;
+                                }).map((e, k) => (
                                     <SelectItem key={k} value={String(e.id)}>
                                         {e.name}
                                     </SelectItem>
@@ -235,7 +252,12 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                         </SelectContent>
                     </Select>
                     <ToggleGroup onValueChange={e => setStatus(e)} variant={"outline"} type="single">
-                        <ToggleGroupItem className="data-[state='on']:!bg-blue-500 data-[state='on']:!text-white" value="SAKIT">SAKIT</ToggleGroupItem>
+                    {
+                        guru && users[users.findIndex(e => e.id === Number(guru))].name === "HADIR SEMUA" && (
+                            <ToggleGroupItem className="data-[state='on']:!bg-lime-500 data-[state='on']:!text-white" value="HADIR">HADIR</ToggleGroupItem>
+                        )
+                    }
+                    <ToggleGroupItem className="data-[state='on']:!bg-blue-500 data-[state='on']:!text-white" value="SAKIT">SAKIT</ToggleGroupItem>
                         <ToggleGroupItem className="data-[state='on']:!bg-yellow-500 data-[state='on']:!text-white" value="IJIN">IJIN</ToggleGroupItem>
                         <ToggleGroupItem className="data-[state='on']:!bg-red-500 data-[state='on']:!text-white" value="ALPA">ALPA</ToggleGroupItem>
                     </ToggleGroup>
@@ -273,12 +295,17 @@ export default function Absen({users, absen, flash, authID, google_client_id, go
                                         <TableCell>{a.tanggal}</TableCell>
                                         <TableCell>{a.user.name}</TableCell>
                                         <TableCell>{a.status}</TableCell>
-                                        <TableCell>{
-                                            a.keterangan }
+                                        <TableCell>
+                                            {
+                                                a.user.name === "HADIR SEMUA" ? a.user.gender === "L" ? "Guru Putra" : "Guru Putri" : ""
+                                            }
+                                            <div>
+                                            { a.keterangan }
+                                            </div>
 
-                                            { piketUser && piketUser?.length > 0 && piketUser[0].histories.find(h => ["Operator", "Kepala Sekolah", "Bendahara", "administrator"].includes(h.jabatan)) && (
+                                            {/* { piketUser && piketUser?.length > 0 && piketUser[0].histories.find(h => ["Operator", "Kepala Sekolah", "Bendahara", "administrator"].includes(h.jabatan)) && (
                                                 <ConfirmDelete date={date ?? new Date()} data={a}/>
-                                            )}
+                                            )} */}
                                         </TableCell>
                                     </TableRow>
                                 ))

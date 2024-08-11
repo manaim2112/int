@@ -82,6 +82,7 @@ Route::prefix("/dashboard")->middleware(['auth', 'verified'])->group(function ()
         Route::post('/id/{id}/update', [UserController::class, 'dashboardUpdate'])->name('dashboard.user.update.post');
         Route::post('/id/{id}/update/jabatan', [UserController::class, 'dashboardUpdateJabatan'])->name('dashboard.user.update.jabatan.post');
         Route::post('/id/{id}/delete/jabatan', [UserController::class, 'dashboardDeleteJabatan'])->name('dashboard.user.delete.jabatan.post');
+        Route::post("/id/{id}/update/gender", [UserController::class, 'dashboardUpdateGender'])->name('dashboard.user.update.gender');
     });
 
     Route::prefix('absen')->group(function () {
