@@ -146,7 +146,7 @@ class AbsenController extends Controller
         $google_redirect_uri = env("GOOGLE_CALLBACK_URL");
     
         return Inertia::render("Absen", [
-            "userpiket" => $piket,
+            "userpiket" => $piket ?? [],
             "users" => $users,
             "absen" => $absen ?? [],
             "authID" => auth()->id() ?? null,
