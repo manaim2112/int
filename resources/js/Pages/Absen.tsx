@@ -75,6 +75,8 @@ export default function Absen({userpiket, users, absen, flash, authID, google_cl
             return h;        
         });
         // console.log(authID, y, users);
+        console.log(userpiket);
+        console.log(y);
         setPiketUser(y);
     }, [])
 
