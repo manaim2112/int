@@ -128,7 +128,6 @@ class AbsenController extends Controller
             return $history->pluck('jabatan')->intersect(["Guru Piket", "Operator", "Kepala Sekolah", "Bendahara"])->isNotEmpty();
         });
 
-        dd($piket);
 
         $now = now()->format("Y-m-d");
         $date = $request->query("date");
