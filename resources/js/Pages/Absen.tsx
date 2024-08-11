@@ -177,7 +177,7 @@ export default function Absen({userpiket, users, absen, flash, authID, google_cl
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Pilih Guru Piket</SelectLabel>
-                                {userpiket && userpiket.map((e, k) => (
+                                {userpiket && Array.isArray(userpiket) && userpiket.map((e, k) => (
                                     <SelectItem key={k} value={String(e.id)}>
                                         {e.name}
                                     </SelectItem>
