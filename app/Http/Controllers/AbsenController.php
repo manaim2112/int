@@ -126,7 +126,7 @@ class AbsenController extends Controller
         $piket = $users->filter(function($user) {
             $history = collect($user->histories);
             return $history->pluck('jabatan')->intersect(["Guru Piket", "Operator", "Kepala Sekolah", "Bendahara"])->isNotEmpty();
-        });
+        })->values()->toArray();
 
 
         $now = now()->format("Y-m-d");
