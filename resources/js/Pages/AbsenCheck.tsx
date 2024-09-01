@@ -205,7 +205,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                                 This action cannot be undone.
                             </DrawerDescription>
                         </DrawerHeader>
-                        <div className="px-5">
+                        <div className="px-5 h-[70vh] overflow-auto">
                             <div className="font-bold">
                                 TOTAL STATUS
                                 
@@ -220,7 +220,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                             <div className="">ALPA :
                             <span className="font-extrabold">{totals.alpa}</span>
                             </div>
-                            <Table className="max-h-[60vh] overflow-auto">
+                            <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>ID</TableHead>
