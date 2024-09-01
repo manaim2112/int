@@ -1,4 +1,4 @@
-import { Button } from "@/Components/ui/button";
+import { Button, buttonVariants } from "@/Components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { cn } from "@/lib/utils";
 import { id } from "date-fns/locale";
@@ -9,7 +9,7 @@ import { Calendar } from "@/Components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { ConfirmDelete } from "./Absen";
 import { PageProps } from "@/types";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/Components/ui/drawer";
 import { Input } from "@/Components/ui/input";
 
@@ -217,6 +217,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
             </div>
             <div className="fixed bottom-3 right-3">
                 <Button className="mx-2" onClick={() => exportToExcel(filteredUserTotals)}>Export to CSV</Button>
+                <Link href={route('absen.spreadsheet')} className={"mx-2 " + buttonVariants({ variant : "default"})} target="_blank">Real Data</Link>
                 <Drawer>
                     <DrawerTrigger><Button> Analisis </Button></DrawerTrigger>
                     <DrawerContent>

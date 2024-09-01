@@ -111,6 +111,14 @@ class AbsenController extends Controller
         //     ]);
         // }
     }
+
+    public function spreadsheet() {
+        $absen = Absen::with('user')->get()->values()->toJson();
+
+        return Inertia::render('AbsenReal', [
+            "absen" => $absen,
+        ]);
+    }
     
     
     public function index(Request $request) {
@@ -133,7 +141,7 @@ class AbsenController extends Controller
         if($date) {
             $now = $date;
         }
-        
+
         $setting = $request->get("site_setting");
         // DB::enableQueryLog();
         $absen = Absen::with('user')->findDate($now, $now)->where('setting_id', '=', $setting->id)->get();

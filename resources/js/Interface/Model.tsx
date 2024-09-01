@@ -74,6 +74,8 @@ interface Absen {
     jam_dinas : string;
     tanggal : string;
     keterangan : string;
+    created_at? : string;
+    updated_at? : string;
     user : User
 }
 
