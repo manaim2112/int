@@ -189,7 +189,25 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                             >
                                 <TableCell>{a.tanggal}</TableCell>
                                 <TableCell>{a.user.name}</TableCell>
-                                <TableCell>{a.status}</TableCell>
+                                <TableCell>
+                                {
+                                    a.user.name == 'HADIR SEMUA' && a.status == 'HADIR' && (
+                                        <>
+                                            {
+                                                a.user.gender == 'L' && (
+                                                    "Guru Laki-Laki Hadir semua"
+                                                )  
+                                            }
+
+                                            {
+                                                a.user.gender == 'P' && (
+                                                    "Guru Perempuan Hadir semua"
+                                                )  
+                                            }
+                                        </>
+                                    )   
+                                }
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

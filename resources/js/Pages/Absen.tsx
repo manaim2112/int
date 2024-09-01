@@ -244,7 +244,7 @@ export default function Absen({userpiket, users, absen, flash, authID, google_cl
                                                 ))}
                                             </SelectGroup>
                                         ) : 
-                                        users.find(e => e.id === piket)?.gender == 'L' ? (
+                                        users.find(e => e.id === piket)?.gender == 'P' ? (
                                             <SelectGroup>
                                                 <SelectLabel>Pilih Guru Perempuan</SelectLabel>
 
