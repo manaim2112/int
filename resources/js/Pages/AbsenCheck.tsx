@@ -267,7 +267,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                                                                     e.gender == "L" && "Laki-laki"
                                                                 }
                                                                 {
-                                                                    e.gender == "L" && "Perempuan"
+                                                                    e.gender == "P" && "Perempuan"
                                                                 }
                                                             </>
                                                         )
