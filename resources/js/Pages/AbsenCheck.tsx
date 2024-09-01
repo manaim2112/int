@@ -190,6 +190,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                                 <TableCell>{a.tanggal}</TableCell>
                                 <TableCell>{a.user.name}</TableCell>
                                 <TableCell>
+                                    ({a.status})
                                 {
                                     a.user.name == 'HADIR SEMUA' && a.status == 'HADIR' && (
                                         <>
@@ -205,7 +206,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                                                 )  
                                             }
                                         </>
-                                    )   
+                                    )
                                 }
                                 </TableCell>
                             </TableRow>
