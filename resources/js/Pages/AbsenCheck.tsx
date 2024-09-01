@@ -216,6 +216,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                 </Table>
             </div>
             <div className="fixed bottom-3 right-3">
+                <Button className="mx-2" onClick={() => exportToExcel(filteredUserTotals)}>Export to CSV</Button>
                 <Drawer>
                     <DrawerTrigger><Button> Analisis </Button></DrawerTrigger>
                     <DrawerContent>
