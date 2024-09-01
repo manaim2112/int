@@ -18,7 +18,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
     const [startDate, setStartDate] = useState<Date|undefined>(new Date());
     const [endDate, setEndDate] = useState<Date|undefined>(new Date());
     const [totals, setTotals] = useState({ hadir: 0, ijin: 0, sakit: 0, alpa: 0 });
-    const [userTotals, setUserTotals] = useState<{ id : number, name: string, hadir: number, ijin: number, sakit: number, alpa: number, total_tidak_hadir:number }[]>([]);
+    const [userTotals, setUserTotals] = useState<{ id : number, gender : string, name: string, hadir: number, ijin: number, sakit: number, alpa: number, total_tidak_hadir:number }[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
@@ -75,12 +75,13 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
     };
 
     const calculateUserTotals = () => {
-        const totalsMap = new Map<number, { name: string, hadir: number, ijin: number, sakit: number, alpa: number, total_tidak_hadir : number }>();
+        const totalsMap = new Map<number, { name: string, gender : string, hadir: number, ijin: number, sakit: number, alpa: number, total_tidak_hadir : number }>();
 
         absen.forEach(a => {
             const key = a.user.id; // Use user id as key
+            const gender = a.user.gender ?? "";
             if (!totalsMap.has(key)) {
-                totalsMap.set(key, { name: a.user.name, hadir: 0, ijin: 0, sakit: 0, alpa: 0, total_tidak_hadir:0 });
+                totalsMap.set(key, { name: a.user.name, gender, hadir: 0, ijin: 0, sakit: 0, alpa: 0, total_tidak_hadir:0 });
             }
             const userTotals = totalsMap.get(key)!;
             if (a.status === "HADIR") userTotals.hadir++;
@@ -91,7 +92,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
         });
 
         const formattedTotals = Array.from(totalsMap.entries()).map(([id, totals]) => ({
-            id,
+            id, 
             ...totals
         })).sort((a,b) => a.total_tidak_hadir - b.total_tidak_hadir);
 
@@ -256,7 +257,22 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                                         userTotals.map((e,y) => (
                                             <TableRow key={y}>
                                                 <TableCell>{e.id}</TableCell>
-                                                <TableCell>{e.name}</TableCell>
+                                                <TableCell>
+                                                    {e.name} 
+                                                    {
+                                                        e.name == "HADIR SEMUA" && (
+                                                            <>
+                                                                {
+                                                                    e.gender == "L" && "Laki-laki"
+                                                                }
+                                                                {
+                                                                    e.gender == "L" && "Perempuan"
+                                                                }
+                                                            </>
+                                                        )
+                                                    }
+
+                                                </TableCell>
                                                 <TableCell>{e.hadir}</TableCell>
                                                 <TableCell>{e.ijin}</TableCell>
                                                 <TableCell>{e.sakit}</TableCell>
