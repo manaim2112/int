@@ -220,7 +220,7 @@ export default function AbsenCheck({absen} : PageProps<{absen: Absen[]}>) {
                             <div className="">ALPA :
                             <span className="font-extrabold">{totals.alpa}</span>
                             </div>
-                            <Table>
+                            <Table className="max-h-[60vh] overflow-auto">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>ID</TableHead>

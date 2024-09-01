@@ -226,31 +226,43 @@ export default function Absen({userpiket, users, absen, flash, authID, google_cl
                             <SelectValue placeholder="Guru" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Pilih Guru Laki-Laki</SelectLabel>
-                                {users.filter(e => e.gender == "L").sort((a,b) => {
-                                    if (a.name === "HADIR SEMUA") return -1;
-                                    if (b.name === "HADIR SEMUA") return 1;
-                                    return a.name < b.name ? -1 : 1;
-                                }).map((e, k) => (
-                                    <SelectItem key={k} value={String(e.id)}>
-                                        {e.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                            <SelectGroup>
-                                <SelectLabel>Pilih Guru Perempuan</SelectLabel>
+                        {
+                            users.find(e => e.id === piket) && (
+                                <>
+                                    {
+                                        users.find(e => e.id === piket)?.gender == 'L' ? (
+                                            <SelectGroup>
+                                                <SelectLabel>Pilih Guru Laki-Laki</SelectLabel>
+                                                {users.filter(e => e.gender == "L").sort((a,b) => {
+                                                    if (a.name === "HADIR SEMUA") return -1;
+                                                    if (b.name === "HADIR SEMUA") return 1;
+                                                    return a.name < b.name ? -1 : 1;
+                                                }).map((e, k) => (
+                                                    <SelectItem key={k} value={String(e.id)}>
+                                                        {e.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        ) : 
+                                        users.find(e => e.id === piket)?.gender == 'L' ? (
+                                            <SelectGroup>
+                                                <SelectLabel>Pilih Guru Perempuan</SelectLabel>
 
-                                {users.filter(e => e.gender == "P").sort((a,b) => {
-                                    if (a.name === "HADIR SEMUA") return -1;
-                                    if (b.name === "HADIR SEMUA") return 1;
-                                    return a.name < b.name ? -1 : 1;
-                                }).map((e, k) => (
-                                    <SelectItem key={k} value={String(e.id)}>
-                                        {e.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
+                                                {users.filter(e => e.gender == "P").sort((a,b) => {
+                                                    if (a.name === "HADIR SEMUA") return -1;
+                                                    if (b.name === "HADIR SEMUA") return 1;
+                                                    return a.name < b.name ? -1 : 1;
+                                                }).map((e, k) => (
+                                                    <SelectItem key={k} value={String(e.id)}>
+                                                        {e.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        ) : ""
+                                    }
+                                </>
+                            )
+                        }
                         </SelectContent>
                     </Select>
                     <ToggleGroup onValueChange={e => setStatus(e)} variant={"outline"} type="single">
