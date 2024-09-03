@@ -76,7 +76,8 @@ interface Absen {
     keterangan : string;
     created_at? : string;
     updated_at? : string;
-    user : User
+    user : User;
+    piket : User;
 }
 
 

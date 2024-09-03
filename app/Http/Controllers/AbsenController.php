@@ -113,7 +113,7 @@ class AbsenController extends Controller
     }
 
     public function spreadsheet() {
-        $absen = Absen::with('user')->get()->all();
+        $absen = Absen::with(['user', 'piket'])->get()->all();
 
         return Inertia::render('AbsenReal', [
             "absen" => $absen,

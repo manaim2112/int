@@ -27,7 +27,8 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
                         <TableHead></TableHead>
                         <TableHead>Tanggal</TableHead>
                         <TableHead>Tanggal Kehadiran</TableHead>
-                        <TableHead>Nama</TableHead>
+                        <TableHead>Guru Piket</TableHead>
+                        <TableHead>Nama Guru</TableHead>
                         <TableHead>Jenis Kelamin</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Jam Dinas (Jika ada)</TableHead>
@@ -42,6 +43,7 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
                                 <TableHead>{k+1}</TableHead>
                                 <TableHead>{e.created_at}</TableHead>
                                 <TableHead>{e.tanggal}</TableHead>
+                                <TableHead>{e.piket.name}</TableHead>
                                 <TableHead>{e.user.name}</TableHead>
                                 <TableHead>{e.user.gender}</TableHead>
                                 <TableHead>{e.status}</TableHead>
