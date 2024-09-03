@@ -1,8 +1,21 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { PageProps } from "@/types";
+import { useEffect, useState } from "react";
 
 export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
+    const [a, setA] = useState<Absen[]|null>(null);
+    useEffect(() => {
+        const y = absen.map(r => {
+            const createAt = new Date(String(r.created_at));
+            const time = new Date(String(r.tanggal));
 
+            r.created_at = `${createAt.getDate()}/${createAt.getMonth()}/${createAt.getFullYear()}`;
+            r.tanggal = `${time.getDate()}/${time.getMonth()}/${time.getFullYear()}`;
+            return r;
+        });
+
+        setA(y);
+    }, []);
     return (
         <>
             <Table>
@@ -21,7 +34,7 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
                 </TableHeader>
                 <TableBody>
                     {
-                        absen.map((e, k) => (
+                        a && a.map((e, k) => (
                             <TableRow key={k}>
                                 <TableHead>{k+1}</TableHead>
                                 <TableHead>{e.created_at}</TableHead>
