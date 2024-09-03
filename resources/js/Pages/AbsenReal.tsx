@@ -1,27 +1,44 @@
 import { PageProps } from "@/types";
 import { Head } from "@inertiajs/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function AbsenReal({absen} : PageProps<{ absen : Absen[]}>) {
+export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
     const SpreadSheet = useRef<HTMLDivElement>(null);
+    const [scriptLoaded, setScriptLoaded] = useState(false);
+
+    // Function to load the script dynamically
+    const loadScript = (url: string) => {
+        return new Promise<void>((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = url;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Script load error: ${url}`));
+            document.body.appendChild(script);
+        });
+    };
 
     useEffect(() => {
-        const filter = absen.map(e => {
-            return [
-                e.created_at ?? "",
-                e.tanggal,
-                e.user.name,
-                e.user.gender ?? "",
-                e.status,
-                e.jam_dinas,
-                e.keterangan,
-                e.setting_id + "/" + (e.setting_id + 1),
-            ];
-        });
+        // Load the jsSpreadsheet script and then initialize the spreadsheet
+        loadScript("https://cdn.jsdelivr.net/npm/jspreadsheet-ce/dist/index.min.js")
+            .then(() => setScriptLoaded(true))
+            .catch(error => console.error(error));
+    }, []);
+
+    useEffect(() => {
+        if (!scriptLoaded) return;
 
         if (SpreadSheet.current) {
             jspreadsheet(SpreadSheet.current, {
-                data: filter, // Menggunakan array dua dimensi
+                data: absen.map(e => [
+                    e.created_at ?? "",
+                    e.tanggal,
+                    e.user.name,
+                    e.user.gender ?? "",
+                    e.status,
+                    e.jam_dinas,
+                    e.keterangan,
+                    e.setting_id + "/" + (e.setting_id + 1),
+                ]),
                 columns: [
                     { title: 'Tanggal', width: 300, type: 'text' },
                     { title: 'Tanggal Kehadiran', width: 300, type: 'text' },
@@ -34,15 +51,15 @@ export default function AbsenReal({absen} : PageProps<{ absen : Absen[]}>) {
                 ]
             });
         }
-    }, [absen])
-    return(
+    }, [scriptLoaded, absen]);
+
+    return (
         <>
             <Head>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce/dist/jspreadsheet.min.css" type="text/css" />
-                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce/dist/index.min.js"></script>
             </Head>
 
             <div ref={SpreadSheet}></div>
         </>
-    )
+    );
 }
