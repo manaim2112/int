@@ -113,10 +113,15 @@ class AbsenController extends Controller
     }
 
     public function spreadsheet() {
-        $absen = Absen::with(['user', 'piket'])->get()->all();
+        // $absen = Absen::with(['user', 'piket'])->get()->all();
+        $absenChunks = collect(); // Mengumpulkan data
+
+        Absen::with(['user', 'piket'])->chunk(100, function ($absens) use (&$absenChunks) {
+            $absenChunks = $absenChunks->merge($absens);
+        });
 
         return Inertia::render('AbsenReal', [
-            "absen" => $absen,
+            "absen" => $absenChunks,
         ]);
     }
     
