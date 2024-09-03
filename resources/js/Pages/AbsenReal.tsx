@@ -6,7 +6,7 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
     return (
         <>
             <Table>
-                <TableHeader>
+                <TableHeader className="sticky top-0 z-40">
                     <TableRow>
                         <TableHead></TableHead>
                         <TableHead>Tanggal</TableHead>
