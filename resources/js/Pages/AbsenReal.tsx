@@ -9,6 +9,10 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
     // Function to load the script dynamically
     const loadScript = (url: string) => {
         return new Promise<void>((resolve, reject) => {
+            if (document.querySelector(`script[src="${url}"]`)) {
+                resolve(); // Script already loaded
+                return;
+            }
             const script = document.createElement("script");
             script.src = url;
             script.onload = () => resolve();
@@ -18,14 +22,13 @@ export default function AbsenReal({ absen }: PageProps<{ absen: Absen[] }>) {
     };
 
     useEffect(() => {
-        // Load the jsSpreadsheet script and then initialize the spreadsheet
         loadScript("https://cdn.jsdelivr.net/npm/jspreadsheet-ce/dist/index.min.js")
             .then(() => setScriptLoaded(true))
             .catch(error => console.error(error));
     }, []);
 
     useEffect(() => {
-        if (!scriptLoaded) return;
+        if (!scriptLoaded || typeof jspreadsheet === "undefined") return;
 
         if (SpreadSheet.current) {
             jspreadsheet(SpreadSheet.current, {
